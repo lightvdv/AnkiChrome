@@ -12,8 +12,7 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*", "<all_urls>"],
-      "js": ["editor.bundle.js"],
-      "css": ["editor.styles.css"]
+      "js": ["editor.bundle.js"]
     }
   ],
   "web_accessible_resources": [
