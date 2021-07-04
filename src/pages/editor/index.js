@@ -6,10 +6,11 @@ import ReactDOM from "react-dom";
 function App() {
     return <div>
         <Button color="primary"
+                variant="contained"
                 onClick={() => {
                     chrome.storage.sync.set({"create_card": new Date().toString()});
                 }}>
-            Hello World
+            Hello Anki
         </Button>;
     </div>
 }
