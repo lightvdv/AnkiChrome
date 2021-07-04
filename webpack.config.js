@@ -45,6 +45,9 @@ const options = {
         filename: '[name].bundle.js',
         publicPath: ASSET_PATH,
     },
+    chromeExtensionBoilerplate: {
+        notHotReload: ['editor'],
+    },
     module: {
         rules: [
             {
