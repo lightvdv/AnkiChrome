@@ -19,7 +19,7 @@ export function Editor(){
                 onClick={() => {
                     chrome.storage.sync.set({"create_card": new Date().toString()});
                 }}>
-            Hello Anki
+            Hello Anki!
         </Button>;
     </div>
 }
