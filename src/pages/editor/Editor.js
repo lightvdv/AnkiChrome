@@ -10,20 +10,31 @@ const useStyles = makeStyles({
     }
 });
 
-export function Editor(){
+
+
+const Editor = () => {
     const classes = useStyles();
 
-    return <div className={classes.editor}>
-        <Button color="secondary"
-                variant="contained"
-                onClick={() => {
-                    chrome.storage.sync.set({"create_card": new Date().toString()});
-                }}>
-            Hello Anki!
-        </Button>;
-    </div>
+    React.useEffect(() => {
+     window.addEventListener('mouseup', (event) => {
+       return <div className={classes.editor}>
+         <Button color="secondary"
+                 variant="contained"
+                 onClick={() => {
+                   chrome.storage.sync.set({"create_card": new Date().toString()});
+                 }}>
+           English word!
+         </Button>;
+       </div>
+    });
+  }, []);
+
+
+
 }
 
 export default Editor;
+
+
 
 
