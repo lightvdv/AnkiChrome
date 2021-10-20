@@ -1,6 +1,6 @@
-import {Button, makeStyles} from "@material-ui/core";
+import { Button, makeStyles, Paper } from '@material-ui/core';
 import React, { useState } from 'react';
-import { GetRequestHooks } from './getRequest';
+import { getTranslation } from './getRequest';
 
 const useStyles = makeStyles({
     editor:{
@@ -11,38 +11,52 @@ const useStyles = makeStyles({
     }
 });
 
-
-
-
-
 export function Editor() {
 
   const [top, setTop] = useState(0);
   const [left, setLeft] = useState(0);
   const [word, setWord] = useState("")
+  const [imageUrl, setImage] = useState("")
 
   React.useEffect(() => {
     window.addEventListener('dblclick', (event) => {
-       setTop(event.clientY); setLeft(event.clientX)
-       setWord(window.getSelection().toString())
-      {GetRequestHooks()}
+      setTop(event.clientY);
+      setLeft(event.clientX);
+
+
+      const word = window.getSelection().toString();
+      setWord(word);
+
+      getTranslation(word).then(response => {
+        setWord(word + '-' +
+          response.data[0].meanings[0].translation.text
+        );
+
+        const imageUrl = response.data[0].meanings[0].imageUrl;
+        setImage(imageUrl);
+      });
     });
-  }, [top, left, word]);
+  }, [top, left, word, imageUrl]);
 
 
-  const classes = useStyles({top: top, left: left});
+  const classes = useStyles({ top: top, left: left });
 
-  return <div className={classes.editor}>
+  return <Paper elevation={3}>
+    <div className={classes.editor}>
 
     <Button color="secondary"
             variant="contained"
+            min-width="200px"
             onClick={() => {
               chrome.storage.sync.set({"create_card": new Date().toString()});
             }}>
       {word}
     </Button>
-  </div>
+    <div><img src={imageUrl} width="200px" height="200px" alt="Word description"
 
+    /></div>
+  </div>
+  </Paper>
 }
 
 export default Editor;
