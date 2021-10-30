@@ -89,7 +89,7 @@ export function Editor() {
 
 
       <List>
-        <wordTranslations />
+        {word}
       </List>
 
 
