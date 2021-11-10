@@ -18,15 +18,12 @@ const useStyles = makeStyles({
 
 export function Editor() {
 
-  const [top, setTop] = useState();
-  const [left, setLeft] = useState();
+  const [top, setTop] = useState(-10000);
+  const [left, setLeft] = useState(-10000);
   const [word, setTranslations] = useState('');
   const [selectedWord, setSelectedWord] = useState('');
   const [imageUrl, setImage] = useState('');
-/*  const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);*/
 
 
   React.useEffect(() => {
@@ -63,22 +60,21 @@ export function Editor() {
 
         const imageUrl = response.data[0].meanings[0].imageUrl;
         setImage(imageUrl);
-       /* handleShow();*/
+
       });
 
-/*
       let closePopUp = (event) => {
-        console.log(event);
-        console.log(chrome)
-        //chrome.close()
-        /!*event.view.closed()*!/
+        setTop(-10000);
+        setLeft(-2000);
       };
 
 
-      window.addEventListener('click', window.close());
+
+
+      window.addEventListener('click', closePopUp);
       return () => {
         window.removeEventListener('click', closePopUp);
-      };*/
+      };
     };
 
 
@@ -112,15 +108,15 @@ export function Editor() {
         }}>
           <ul>
             {Object.values(word).join('').split(',').map((item) => (
-              <ListItem key={`item-${item}`} sx={{ width: 170, pb: 0, mb: -0.5, mt: -1 }}>
+              <ListItem key={`item-${item}`} sx={{ width: 170, pb: 0, mb: -0.5, mt: -2 }}>
                 <ListItemText primary={`${item}`} />
-                <IconButton color='primary' sx={{ position: 'absolute', right: -20 }}
+                <IconButton color='primary' sx={{ position: 'relative', right: -20 }}
                             onClick={() => {
                               chrome.storage.sync.set({
                                 engVersion: selectedWord,
                                 rusVersion: item,
                               });
-                             /* handleClose()*/
+
                             }}>
                   <ControlPointIcon />
                 </IconButton>
