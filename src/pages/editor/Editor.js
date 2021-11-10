@@ -93,7 +93,7 @@ export function Editor() {
 
 
 
-  }, [top, left, word, selectedWord, imageUrl, show]);
+  }, [top, left, word, selectedWord, imageUrl]);
   const classes = useStyles({ top: top, left: left });
 
 
