@@ -1,37 +1,48 @@
-import { Box, Button, List, ListItem, ListItemText, makeStyles} from '@material-ui/core';
 import React, { useState } from 'react';
 import { getTranslation } from './getRequest';
-import { wordTranslations } from './wordTranslations';
+import { makeStyles } from '@mui/styles';
+import Box from '@mui/material/Box';
+import { ImageListItem, List, ListItem, ListItemText, IconButton, Container } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
+
 
 const useStyles = makeStyles({
-    editor:{
-        position: "fixed",
-        zIndex: 10000,
-        top: (props) => props.top + "px",
-        left: (props) => props.left + "px"
-    }
+  editor: {
+    position: 'fixed',
+    zIndex: 10000,
+    top: (props) => props.top + 'px',
+    left: (props) => props.left + 'px',
+  },
 });
 
 export function Editor() {
 
-  const [top, setTop] = useState(0);
-  const [left, setLeft] = useState(0);
-  const [word, setWord] = useState("")
-  const [imageUrl, setImage] = useState("")
+  const [top, setTop] = useState();
+  const [left, setLeft] = useState();
+  const [word, setTranslations] = useState('');
+  const [selectedWord, setSelectedWord] = useState('');
+  const [imageUrl, setImage] = useState('');
+/*  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);*/
+
 
   React.useEffect(() => {
 
-    const setTotal = (event) => {
-      setTop(event.clientY);
-      setLeft(event.clientX);
+    const setData = (event) => {
+      setTop(event.clientY + 15);
+      setLeft(event.clientX - 40);
 
-      const word = window.getSelection().toString().replace(/\s+/g, '').toLowerCase();
-      /*setWord(word);*/
+      const selectedWord = window.getSelection().toString().replace(/\s+/g, '').toLowerCase();
+      setSelectedWord(selectedWord)
 
-      getTranslation(word).then(response => {
+      getTranslation(selectedWord).then(response => {
+
         let translationsArr = [];
         for (let i in response.data) {
-          if (response.data[i].text === word) {
+          if (response.data[i].text === selectedWord) {
             for (let j in response.data[i].meanings) {
               for (let u in response.data[i].meanings[j].translation) {
                 let translation = response.data[i].meanings[j].translation[u];
@@ -44,91 +55,85 @@ export function Editor() {
             translationsArr.push(response.data[0].meanings[0].translation.text);
           }
         }
-
         let cleanArr = [...new Set(translationsArr)];
-        cleanArr.splice(5, cleanArr.length);
-        console.log(cleanArr);
-
-        setWord(word + '-' +
-          cleanArr,
-        );
+        cleanArr.splice(4, cleanArr.length - 1);
+        console.log(cleanArr.join(', '));
+        setTranslations(cleanArr.join(', '));
 
 
         const imageUrl = response.data[0].meanings[0].imageUrl;
         setImage(imageUrl);
+       /* handleShow();*/
       });
-    }
 
-    window.addEventListener('dblclick', setTotal);
+/*
+      let closePopUp = (event) => {
+        console.log(event);
+        console.log(chrome)
+        //chrome.close()
+        /!*event.view.closed()*!/
+      };
+
+
+      window.addEventListener('click', window.close());
+      return () => {
+        window.removeEventListener('click', closePopUp);
+      };*/
+    };
+
+
+
+    window.addEventListener('dblclick', setData);
+
     return () => {
-      window.removeEventListener('dblclick', setTotal);
-    }
-  }, [top, left, word, imageUrl]);
+      window.removeEventListener('dblclick', setData);
+    };
 
+
+
+
+
+  }, [top, left, word, selectedWord, imageUrl, show]);
   const classes = useStyles({ top: top, left: left });
 
 
+  return (
+    <Container fixed>
+    <Box className={classes.editor} >
+      <Paper elevation={10} variant='elevation' sx={{ width: 200, textAlign: 'center' }}>
 
+        <ImageListItem sx={{ width: 170, mt: 1 }}>
+          <img src={imageUrl} alt='Word description' />
+        </ImageListItem>
 
-  return <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'text.secondary' }}>
-    <div className={classes.editor}>
+        <List sx={{
+          width: '100%', maxWidth: 360, bgcolor: 'background.paper', position: 'relative',
+          overflow: 'visible', minHeight: 50, maxHeight: 300, '& ul': { padding: 0 },
+        }}>
+          <ul>
+            {Object.values(word).join('').split(',').map((item) => (
+              <ListItem key={`item-${item}`} sx={{ width: 170, pb: 0, mb: -0.5, mt: -1 }}>
+                <ListItemText primary={`${item}`} />
+                <IconButton color='primary' sx={{ position: 'absolute', right: -20 }}
+                            onClick={() => {
+                              chrome.storage.sync.set({
+                                engVersion: selectedWord,
+                                rusVersion: item,
+                              });
+                             /* handleClose()*/
+                            }}>
+                  <ControlPointIcon />
+                </IconButton>
+              </ListItem>
+            ))}
+          </ul>
+        </List>
+      </Paper>
+    </Box>
+    </Container>
+  );
 
-    <Button color="secondary"
-            variant="contained"
-            min-width="200px"
-            onClick={() => {
-              chrome.storage.sync.set({"create_card": new Date().toString()});
-            }}>
-            <p>Add to ANKI</p>
-
-    </Button>
-
-
-
-    <div><img src={imageUrl} width="200px" height="200px" alt="Word description" /></div>
-
-
-      <List>
-        {word}
-      </List>
-
-
-      {/*  {word.map((each) => (
-          <div>{each}</div>
-        ))}*/}
-      {/*  console.log({word})
-        {word}*/}
-
-{/*
-
-      <List>
-        <ListItem disablePadding>
-          {word}
-        </ListItem>
-        <ListItem disablePadding>
-          {word}
-
-        </ListItem>
-      </List>
-    <nav aria-label="secondary mailbox folders">
-      <List>
-        <ListItem disablePadding>
-
-          {word}
-
-        </ListItem>
-        <ListItem disablePadding>
-            <ListItemText primary="Spam" />
-
-        </ListItem>*/}
-{/*      </List>
-    </nav>*/}
-    </div>
-  </Box>
 }
 
+
 export default Editor;
-
-
-
-
