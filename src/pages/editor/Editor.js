@@ -25,7 +25,6 @@ export function Editor() {
   const [imageUrl, setImage] = useState('');
 
 
-
   React.useEffect(() => {
 
     const setData = (event) => {
@@ -33,7 +32,7 @@ export function Editor() {
       setLeft(event.clientX - 40);
 
       const selectedWord = window.getSelection().toString().replace(/\s+/g, '').toLowerCase();
-      setSelectedWord(selectedWord)
+      setSelectedWord(selectedWord);
 
       getTranslation(selectedWord).then(response => {
 
@@ -63,12 +62,10 @@ export function Editor() {
 
       });
 
-      let closePopUp = (event) => {
+      let closePopUp = () => {
         setTop(-10000);
         setLeft(-2000);
       };
-
-
 
 
       window.addEventListener('click', closePopUp);
@@ -78,15 +75,10 @@ export function Editor() {
     };
 
 
-
     window.addEventListener('dblclick', setData);
-
     return () => {
       window.removeEventListener('dblclick', setData);
     };
-
-
-
 
 
   }, [top, left, word, selectedWord, imageUrl]);
@@ -95,41 +87,38 @@ export function Editor() {
 
   return (
     <Container fixed>
-    <Box className={classes.editor} >
-      <Paper elevation={10} variant='elevation' sx={{ width: 200, textAlign: 'center' }}>
+      <Box className={classes.editor}>
+        <Paper elevation={10} variant='elevation' sx={{ width: 200, textAlign: 'center' }}>
 
-        <ImageListItem sx={{ width: 170, mt: 1 }}>
-          <img src={imageUrl} alt='Word description' />
-        </ImageListItem>
+          <ImageListItem sx={{ width: 170, mt: 1 }}>
+            <img src={imageUrl} alt='Word description' />
+          </ImageListItem>
 
-        <List sx={{
-          width: '100%', maxWidth: 360, bgcolor: 'background.paper', position: 'relative',
-          overflow: 'visible', minHeight: 50, maxHeight: 300, '& ul': { padding: 0 },
-        }}>
-          <ul>
-            {Object.values(word).join('').split(',').map((item) => (
-              <ListItem key={`item-${item}`} sx={{ width: 170, pb: 0, mb: -0.5, mt: -2 }}>
-                <ListItemText primary={`${item}`} />
-                <IconButton color='primary' sx={{ position: 'relative', right: -20 }}
-                            onClick={() => {
-                              chrome.storage.sync.set({
-                                engVersion: selectedWord,
-                                rusVersion: item,
-                              });
-
-                            }}>
-                  <ControlPointIcon />
-                </IconButton>
-              </ListItem>
-            ))}
-          </ul>
-        </List>
-      </Paper>
-    </Box>
+          <List sx={{
+            maxWidth: 180, bgcolor: 'background.paper', textAlign: 'center',
+            overflow: 'visible', minHeight: 50, maxHeight: 300, '& ul': { padding: 0, margin: 0 },
+          }}>
+            <ul>
+              {Object.values(word).join('').split(',').map((item) => (
+                <ListItem key={`item-${item}`} sx={{ padding: 0, mb: -0.5, mt: -2, ml: 2, mr: 2 }}>
+                  <ListItemText primary={`${item}`} />
+                  <IconButton color='primary'
+                              onClick={() => {
+                                chrome.storage.sync.set({
+                                  engVersion: selectedWord,
+                                  rusVersion: item,
+                                });
+                              }}>
+                    <ControlPointIcon />
+                  </IconButton>
+                </ListItem>
+              ))}
+            </ul>
+          </List>
+        </Paper>
+      </Box>
     </Container>
   );
-
 }
-
 
 export default Editor;

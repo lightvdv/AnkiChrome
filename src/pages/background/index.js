@@ -1,4 +1,4 @@
-chrome.storage.onChanged.addListener(function(changes, namespace) {
+chrome.storage.onChanged.addListener(function(changes) {
 
 
     let myHeaders = new Headers();
