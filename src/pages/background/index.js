@@ -40,13 +40,5 @@ chrome.storage.onChanged.addListener(function(changes) {
       .catch(error => console.log('error', error));
 
 
-    chrome.storage.local.clear(function() {
-        let error = chrome.runtime.lastError;
-        if (error) {
-            console.error(error);
-        }
-    });
-    chrome.storage.sync.clear();
-
 });
 
