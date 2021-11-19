@@ -1,8 +1,27 @@
 import React from 'react';
-import ReactDOM from "react-dom";
-import Editor from "./Editor";
+import ReactDOM from 'react-dom';
+import Editor from './Editor';
+import { getWordTranslation } from '../../storage/word_translation/wordTranslationsActions';
 
-const container = document.createElement("div");
+
+function subscribe(event) {
+  const word = window.getSelection();
+  let positionX = event.clientY + 15;
+  let positionY = event.clientX - 40;
+
+  getWordTranslation(word, positionX, positionY);
+}
+
+window.addEventListener('dblclick', subscribe);
+
+const container = document.createElement('div');
 document.body.appendChild(container);
+ReactDOM.render(<Editor />, container);
 
-ReactDOM.render(<Editor/>, container);
+
+
+
+
+
+
+
