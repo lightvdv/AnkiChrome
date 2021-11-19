@@ -2,7 +2,7 @@ class Word {
   constructor(word, imageUrl, translations) {
     this._word = word;
     this._imageUrl = imageUrl;
-    this._thranslations = translations;
+    this._translations = translations;
   }
 }
 

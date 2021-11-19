@@ -1,6 +1,7 @@
 import { fetchTranslation } from '../../api/translation/skyEng';
 import Status from './wordTranslationStatus';
 import WordTranslationsState from './wordTranslationsState';
+import {WordTranslationsKey} from  './wordTranslationsState'
 
 
 export function getWordTranslation(word, positionX, positionY) {
@@ -10,12 +11,11 @@ export function getWordTranslation(word, positionX, positionY) {
 
   fetchTranslation(word)
     .then(wordTranslations => {
+      let key = WordTranslationsKey
+      let WordTranslationsStateDispatch = {}
+      WordTranslationsStateDispatch[key] = new WordTranslationsState(Status.READY, wordTranslations, positionX, positionY)
 
-      let key = WordTranslationsState.StorageKey
-      let obj = {}
-      obj[key] = new WordTranslationsState(Status.READY, wordTranslations, positionX, positionY)
-
-      chrome.storage.local.set(obj);
+      chrome.storage.local.set(WordTranslationsStateDispatch);
     })
     .catch( error => console.error('Error:', error) )
 }
